@@ -37,9 +37,13 @@ directive to your vhost configuration (server context), like this:
         . ~/.bash_aliases
         
     or something similar, depending on the name and location of the
-    files where the aliases are defined.    
+    file where the aliases are defined.    
+    
+ 3. Install the manual pages `man/add-etc-hosts.8` and
+    `man/rm-etc-hosts` under the `man/man8` section of your local
+    documentation directory.
         
- 3. Done.
+ 4. Done.
  
 ## Documentation
  

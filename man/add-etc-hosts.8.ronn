@@ -1,4 +1,4 @@
-add-etc-hosts, rm-etc-hosts -- add/remove an hostname to /etc/hosts
+rm-etc-hosts, add-etc-hosts -- add/remove an hostname to /etc/hosts
 ===================================================================
 
 ## SYNOPSIS
@@ -30,13 +30,10 @@ has no effect.
 ## EXAMPLES
 
 Enable a site:
-
     add-etc-hosts my.local.wp.site
 
 Disable a site:
-
     rm-etc-hosts static.host-local
-
     
 ## FILES 
 
@@ -61,4 +58,3 @@ The latest version of add-etc-hosts is available from:
 
 add-etc-hosts was written by Antonio P. P. Almeida \<appa@perusio.net\>
 that also wrote the manual page.
-
