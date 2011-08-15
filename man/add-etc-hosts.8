@@ -4,7 +4,7 @@
 .TH "ADD\-ETC\-HOSTS" "8" "August 2011" "" ""
 .
 .SH "NAME"
-\fBadd\-etc\-hosts\fR \- add/remove an hostname to /etc/hosts
+\fBadd\-etc\-hosts\fR \- add/remove an hostname to/from /etc/hosts
 .
 .SH "SYNOPSIS"
 \fBadd\-etc\-hosts\fR [ \fIhostname\fR ]
@@ -15,7 +15,7 @@
 .br
 .
 .SH "DESCRIPTION"
-This manual page documents briefly the add\-etc\-hosts and the and rm\-etc\-hosts commands\.
+This manual page documents briefly the add\-etc\-hosts and the rm\-etc\-hosts commands\.
 .
 .P
 add\-etc\-hosts is a script that \fBenables\fR a local "bogus" hostname to be used on the loopback interface for development purposes\. While developing sites locally it\'s convenient to refer to the sites through an handle so that they can easily be reached\. The way to do that is by editing the \fB/etc/hosts\fR file and adding the desired hostname to the line relative to \fB127\.0\.0\.1\fR\. This script automates that process\.

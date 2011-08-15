@@ -1,5 +1,5 @@
-rm-etc-hosts, add-etc-hosts -- add/remove an hostname to /etc/hosts
-===================================================================
+rm-etc-hosts, add-etc-hosts -- add/remove an hostname to/from /etc/hosts
+========================================================================
 
 ## SYNOPSIS
 
@@ -9,7 +9,7 @@ rm-etc-hosts, add-etc-hosts -- add/remove an hostname to /etc/hosts
 ## DESCRIPTION
 
 This manual page documents briefly the add-etc-hosts and the 
-and rm-etc-hosts commands. 
+rm-etc-hosts commands. 
 
 add-etc-hosts is a script that **enables** a local "bogus" hostname to
 be used on the loopback interface for development purposes. While
