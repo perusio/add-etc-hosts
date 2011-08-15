@@ -24,7 +24,7 @@ directive to your vhost configuration (server context), like this:
 
 ## Installation
 
- 1. Clone the repo from []() or [download]() it.
+ 1. Clone the git [repo](git://github.com/perusio/add-etc-hosts.git) or [download](https://github.com/perusio/add-etc-hosts/archives/master) it.
  
  2. Put the scripts in a directory included in your `PATH` or define
     aliases like this:
