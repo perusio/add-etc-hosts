@@ -1,0 +1,75 @@
+#!/bin/bash
+
+## add-etc-hosts --- A simple script for adding/removing a local site
+## from /etc/hosts.
+
+## Copyright (C) 2011 António P. P. Almeida <appa@perusio.net>
+
+## Author: António P. P. Almeida <appa@perusio.net>
+
+## Permission is hereby granted, free of charge, to any person obtaining a
+## copy of this software and associated documentation files (the "Software"),
+## to deal in the Software without restriction, including without limitation
+## the rights to use, copy, modify, merge, publish, distribute, sublicense,
+## and/or sell copies of the Software, and to permit persons to whom the
+## Software is furnished to do so, subject to the following conditions:
+
+## The above copyright notice and this permission notice shall be included in
+## all copies or substantial portions of the Software.
+
+## Except as contained in this notice, the name(s) of the above copyright
+## holders shall not be used in advertising or otherwise to promote the sale,
+## use or other dealings in this Software without prior written authorization.
+
+## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+## THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+## FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+## DEALINGS IN THE SOFTWARE.
+
+## The /etc/hosts file.
+ETC_HOSTS=/etc/hosts
+
+
+SCRIPTNAME=${0##*/}
+## Checking the type of action we will perform. Adding or removing.
+ACTION=$(echo $SCRIPTNAME | awk '$0 ~ /rm/ {print "REMOVE"} $0 ~ /add/ {print "ADD"} $0 !~ /(add|rm)/ {print "UNKNOWN"}')
+
+function print_usage() {
+    echo "$SCRIPTNAME <local site name>"
+}
+
+## Signal an unknown action.
+if [ "$ACTION" == "UNKNOWN" ]; then
+    echo "$SCRIPTNAME: Unknown action!"
+    print_usage
+    exit 2
+fi
+
+## Check the number of arguments.
+if [ $# -ne 1 ]; then
+    print_usage
+    exit 1
+fi
+
+## Check that /etc/hosts exists.
+[ -r $ETC_HOSTS ] || (echo "No $ETC_HOSTS file found!" && exit 3)
+
+## Perform the specified action.
+case $ACTION in
+    ADD) # Adding the new hostname to the /etc/hosts file.
+        ## Check if the hostname is already added. If so exit now.
+        grep -qE "^127\.0\.0\.1.*[[:space:]]+$1[[:space:]]*" $ETC_HOSTS && exit 0
+        sed -i "s/^\(127\.0\.0\.1.*\)$/\1 $1/" $ETC_HOSTS && echo "$1 added to $ETC_HOSTS."
+        ;;
+    REMOVE) # Removing the hostname.
+        ## Check if the given hostname exists. If not exit
+        ## now. Nothing to remove.
+        sed -n '1p' $ETC_HOSTS | grep -vqE "^127\.0\.0\.1.*[[:space:]]+$1[[:space:]]*" && exit 0
+        ## Regexes are fragile things.
+        REMOVED_HOST_LINE=$(awk -v hostname=$1 '/^127\.0\.0\.1/ {for(i=1;i<NF+1;i++) if ($i != hostname) s = i != NF ? sprintf("%s%s ", s, $i) : sprintf("%s%s", s, $i)} END {print s}' $ETC_HOSTS)
+        sed -i "s/^127\.0\.0\.1.*$/$REMOVED_HOST_LINE/" $ETC_HOSTS && echo "$1 removed from $ETC_HOSTS."
+        ;;
+esac

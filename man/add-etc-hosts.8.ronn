@@ -1,0 +1,64 @@
+add-etc-hosts, rm-etc-hosts -- add/remove an hostname to /etc/hosts
+===================================================================
+
+## SYNOPSIS
+
+`add-etc-hosts` [ <hostname> ] <br>
+`rm-etc-hosts` [ <hostname> ] <br>
+
+## DESCRIPTION
+
+This manual page documents briefly the add-etc-hosts and the 
+and rm-etc-hosts commands. 
+
+add-etc-hosts is a script that **enables** a local "bogus" hostname to
+be used on the loopback interface for development purposes. While
+developing sites locally it's convenient to refer to the sites through
+an handle so that they can easily be reached. The way to do that is by
+editing the `/etc/hosts` file and adding the desired hostname to the
+line relative to `127.0.0.1`. This script automates that process.
+
+Likewise, rm-etc-hosts disables a hostname by removing the hostname
+from `/etc/hosts`. 
+
+If the hostname exists already in `/etc/hosts ` then trying to add it
+again has no effect.
+
+If the hostname doesn't exist in `/etc/hosts` then trying to remove it
+has no effect.
+
+## EXAMPLES
+
+Enable a site:
+
+    add-etc-hosts my.local.wp.site
+
+Disable a site:
+
+    rm-etc-hosts static.host-local
+
+    
+## FILES 
+
+`/etc/hosts` <br>
+The hosts file. Where local addresses are mapped to hostnames.
+
+## SEE ALSO
+
+nginx\_ensite(8), nginx\_dissite(8), a2ensite(8), a2dissite(8), nginx(1)
+
+## COPYRIGHT
+
+add-etc-hosts is Copyright (C) 2011 Antonio P. P. Almeida
+\<appa@perusio.net\> under the terms of a MIT license.
+
+## AVAILABILITY
+
+The latest version of add-etc-hosts is available from: 
+[https://github.com/perusio/add-etc-hosts](https://github.com/perusio/add-etc-hosts).
+
+## AUTHOR
+
+add-etc-hosts was written by Antonio P. P. Almeida \<appa@perusio.net\>
+that also wrote the manual page.
+
