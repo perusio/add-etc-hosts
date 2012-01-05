@@ -1,16 +1,16 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "ADD\-ETC\-HOSTS" "8" "August 2011" "" ""
+.TH "ADD\-ETC\-HOSTS" "8" "January 2012" "" ""
 .
 .SH "NAME"
 \fBadd\-etc\-hosts\fR \- add/remove an hostname to/from /etc/hosts
 .
 .SH "SYNOPSIS"
-\fBadd\-etc\-hosts\fR [ \fIhostname\fR ]
+\fBadd\-etc\-hosts\fR [ \-6 ] [ \fIhostname\fR ]
 .
 .br
-\fBrm\-etc\-hosts\fR [ \fIhostname\fR ]
+\fBrm\-etc\-hosts\fR [ \-6 ] [ \fIhostname\fR ]
 .
 .br
 .
@@ -19,6 +19,9 @@ This manual page documents briefly the add\-etc\-hosts and the rm\-etc\-hosts co
 .
 .P
 add\-etc\-hosts is a script that \fBenables\fR a local "bogus" hostname to be used on the loopback interface for development purposes\. While developing sites locally it\'s convenient to refer to the sites through an handle so that they can easily be reached\. The way to do that is by editing the \fB/etc/hosts\fR file and adding the desired hostname to the line relative to \fB127\.0\.0\.1\fR\. This script automates that process\.
+.
+.P
+If the \fB\-6\fR optional argument is specified then it adds the hostname also to the IPv6 loopback \fB::1\fR\.
 .
 .P
 Likewise, rm\-etc\-hosts disables a hostname by removing the hostname from \fB/etc/hosts\fR\.
@@ -30,7 +33,7 @@ If the hostname exists already in \fB/etc/hosts\fR then trying to add it again h
 If the hostname doesn\'t exist in \fB/etc/hosts\fR then trying to remove it has no effect\.
 .
 .SH "EXAMPLES"
-Enable a site:
+Enable a site (IPv4 only):
 .
 .IP "" 4
 .
@@ -43,13 +46,39 @@ add\-etc\-hosts my\.local\.wp\.site
 .IP "" 0
 .
 .P
-Disable a site:
+Disable a site (IPv4 only):
 .
 .IP "" 4
 .
 .nf
 
 rm\-etc\-hosts static\.host\-local
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Enable a site (IPv4 and IPv6):
+.
+.IP "" 4
+.
+.nf
+
+add\-etc\-hosts my\.local\.drupal\.site
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Disable a site (IPv4 and IPv6):
+.
+.IP "" 4
+.
+.nf
+
+rm\-etc\-hosts \-6 img\.host\-local
 .
 .fi
 .

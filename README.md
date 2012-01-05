@@ -22,6 +22,14 @@ directive to your vhost configuration (server context), like this:
 
     server_name mywidgetmaker.local;  
 
+If I want to add an **IPv6** hostname I specify the optional argument
+`-6`:
+
+    add-etc-hosts -6 mywidgetmaker.local
+
+Now there's an IPv6 loopback hostname. You can access your new IPv6
+host.
+
 ## Installation
 
  1. Clone the git [repo](git://github.com/perusio/add-etc-hosts.git) or [download](https://github.com/perusio/add-etc-hosts/archives/master) it.

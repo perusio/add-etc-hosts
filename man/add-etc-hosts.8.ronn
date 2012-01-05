@@ -3,8 +3,8 @@ rm-etc-hosts, add-etc-hosts -- add/remove an hostname to/from /etc/hosts
 
 ## SYNOPSIS
 
-`add-etc-hosts` [ <hostname> ] <br>
-`rm-etc-hosts` [ <hostname> ] <br>
+`add-etc-hosts` [ -6 ] [ <hostname> ] <br>
+`rm-etc-hosts` [ -6 ] [ <hostname> ] <br>
 
 ## DESCRIPTION
 
@@ -18,6 +18,9 @@ an handle so that they can easily be reached. The way to do that is by
 editing the `/etc/hosts` file and adding the desired hostname to the
 line relative to `127.0.0.1`. This script automates that process.
 
+If the `-6` optional argument is specified then it adds the hostname
+also to the IPv6 loopback `::1`.
+
 Likewise, rm-etc-hosts disables a hostname by removing the hostname
 from `/etc/hosts`. 
 
@@ -29,12 +32,17 @@ has no effect.
 
 ## EXAMPLES
 
-Enable a site:
+Enable a site (IPv4 only):
     add-etc-hosts my.local.wp.site
 
-Disable a site:
+Disable a site (IPv4 only):
     rm-etc-hosts static.host-local
-    
+
+Enable a site (IPv4 and IPv6):
+    add-etc-hosts my.local.drupal.site
+
+Disable a site (IPv4 and IPv6):
+    rm-etc-hosts -6 img.host-local
 ## FILES 
 
 `/etc/hosts` <br>
