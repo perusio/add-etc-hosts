@@ -32,13 +32,13 @@
 ## The /etc/hosts file.
 ETC_HOSTS=/etc/hosts
 
-
 SCRIPTNAME=${0##*/}
+
 ## Checking the type of action we will perform. Adding or removing.
 ACTION=$(echo $SCRIPTNAME | awk '$0 ~ /rm/ {print "REMOVE"} $0 ~ /add/ {print "ADD"} $0 !~ /(add|rm)/ {print "UNKNOWN"}')
 
 function print_usage() {
-    echo "$SCRIPTNAME <local site name>"
+    echo "$SCRIPTNAME [-6] <local site name>"
 }
 
 ## Signal an unknown action.
@@ -49,27 +49,57 @@ if [ "$ACTION" == "UNKNOWN" ]; then
 fi
 
 ## Check the number of arguments.
-if [ $# -ne 1 ]; then
+if [ $# -lt 1 ] || [ $# -gt 2 ]; then
     print_usage
     exit 1
+fi
+
+## Parse the arguments for IPv6 handling also.
+if [ $# -eq 2 ]; then
+    if [ $1 == "-6" ]; then
+        HOST=$2
+        IPV6="yes"
+    elif [ $2 == "-6" ]; then
+        HOST=$1
+        IPV6="yes"
+    else
+        print_usage
+        exit 2
+    fi
 fi
 
 ## Check that /etc/hosts exists.
 [ -r $ETC_HOSTS ] || (echo "No $ETC_HOSTS file found!" && exit 3)
 
+function add_host() {
+    ## Check if the hostname is already added. If so exit now.
+    grep -qE "^$1.*[[:space:]]+$2[[:space:]]*" $ETC_HOSTS && exit 0
+    sed -i "s/^\($1.*\)$/\1 $2/" $ETC_HOSTS && echo "$2 added to $ETC_HOSTS ($3)."
+} # add_host
+
+function remove_host() {
+   ## Check if the given hostname exists. If not exit
+   ## now. Nothing to remove.
+    sed -n "/^$1/p" $ETC_HOSTS | grep -vqE "^$1.*[[:space:]]+$2[[:space:]]*" && exit 0
+    ## Regexes are fragile things.
+    if [ $3 == "IPv4" ]; then
+        REMOVED_HOST_LINE=$(awk -v hostname=$2 '/^127\.0\.0\.1/ {for(i=1;i<NF+1;i++) if ($i != hostname) s = i != NF ? sprintf("%s%s ", s, $i) : sprintf("%s%s", s, $i)} END {print s}' $ETC_HOSTS)
+    else
+        REMOVED_HOST_LINE=$(awk -v hostname=$2 '/^::1/ {for(i=1;i<NF+1;i++) if ($i != hostname) s = i != NF ? sprintf("%s%s ", s, $i) : sprintf("%s%s", s, $i)} END {print s}' $ETC_HOSTS)
+    fi
+    ## Removed extra space at the end of the line.
+    REMOVED_HOST_LINE=$(echo $REMOVED_HOST_LINE | sed 's/\(.*\)[[:space:]]+$/\1/')
+    sed -i "s/$1.*$/$REMOVED_HOST_LINE/" $ETC_HOSTS && echo "$2 removed from $ETC_HOSTS ($3)."
+} # remove_host
+
 ## Perform the specified action.
 case $ACTION in
     ADD) # Adding the new hostname to the /etc/hosts file.
-        ## Check if the hostname is already added. If so exit now.
-        grep -qE "^127\.0\.0\.1.*[[:space:]]+$1[[:space:]]*" $ETC_HOSTS && exit 0
-        sed -i "s/^\(127\.0\.0\.1.*\)$/\1 $1/" $ETC_HOSTS && echo "$1 added to $ETC_HOSTS."
+        add_host '127\.0\.0\.1' $HOST 'IPv4'
+        [ $IPV6 == "yes" ] && add_host '::1' $HOST 'IPv6'
         ;;
     REMOVE) # Removing the hostname.
-        ## Check if the given hostname exists. If not exit
-        ## now. Nothing to remove.
-        sed -n '1p' $ETC_HOSTS | grep -vqE "^127\.0\.0\.1.*[[:space:]]+$1[[:space:]]*" && exit 0
-        ## Regexes are fragile things.
-        REMOVED_HOST_LINE=$(awk -v hostname=$1 '/^127\.0\.0\.1/ {for(i=1;i<NF+1;i++) if ($i != hostname) s = i != NF ? sprintf("%s%s ", s, $i) : sprintf("%s%s", s, $i)} END {print s}' $ETC_HOSTS)
-        sed -i "s/^127\.0\.0\.1.*$/$REMOVED_HOST_LINE/" $ETC_HOSTS && echo "$1 removed from $ETC_HOSTS."
+        remove_host '127\.0\.0\.1' $HOST 'IPv4'
+        [ $IPV6 == "yes" ] && remove_host '::1' $HOST 'IPv6'
         ;;
 esac
