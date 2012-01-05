@@ -83,8 +83,8 @@
 
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
-<p><code>add-etc-hosts</code> [ <var>hostname</var> ] <br />
-<code>rm-etc-hosts</code> [ <var>hostname</var> ] <br /></p>
+<p><code>add-etc-hosts</code> [ -6 ] [ <var>hostname</var> ] <br />
+<code>rm-etc-hosts</code> [ -6 ] [ <var>hostname</var> ] <br /></p>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
@@ -98,6 +98,9 @@ an handle so that they can easily be reached. The way to do that is by
 editing the <code>/etc/hosts</code> file and adding the desired hostname to the
 line relative to <code>127.0.0.1</code>. This script automates that process.</p>
 
+<p>If the <code>-6</code> optional argument is specified then it adds the hostname
+also to the IPv6 loopback <code>::1</code>.</p>
+
 <p>Likewise, rm-etc-hosts disables a hostname by removing the hostname
 from <code>/etc/hosts</code>.</p>
 
@@ -109,14 +112,24 @@ has no effect.</p>
 
 <h2 id="EXAMPLES">EXAMPLES</h2>
 
-<p>Enable a site:</p>
+<p>Enable a site (IPv4 only):</p>
 
 <pre><code>add-etc-hosts my.local.wp.site
 </code></pre>
 
-<p>Disable a site:</p>
+<p>Disable a site (IPv4 only):</p>
 
 <pre><code>rm-etc-hosts static.host-local
+</code></pre>
+
+<p>Enable a site (IPv4 and IPv6):</p>
+
+<pre><code>add-etc-hosts my.local.drupal.site
+</code></pre>
+
+<p>Disable a site (IPv4 and IPv6):</p>
+
+<pre><code>rm-etc-hosts -6 img.host-local
 </code></pre>
 
 <h2 id="FILES">FILES</h2>
@@ -146,7 +159,7 @@ that also wrote the manual page.</p>
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>August 2011</li>
+    <li class='tc'>January 2012</li>
     <li class='tr'>add-etc-hosts(8)</li>
   </ol>
 
