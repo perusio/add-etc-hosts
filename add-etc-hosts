@@ -37,7 +37,7 @@ SCRIPTNAME=${0##*/}
 ## Checking the type of action we will perform. Adding or removing.
 ACTION=$(echo $SCRIPTNAME | awk '$0 ~ /rm/ {print "REMOVE"} $0 ~ /add/ {print "ADD"} $0 !~ /(add|rm)/ {print "UNKNOWN"}')
 
-function print_usage() {
+print_usage() {
     echo "$SCRIPTNAME [-6] <local site name>"
 }
 
@@ -74,13 +74,13 @@ fi
 ## Check that /etc/hosts exists.
 [ -r $ETC_HOSTS ] || (echo "No $ETC_HOSTS file found!" && exit 3)
 
-function add_host() {
+add_host() {
     ## Check if the hostname is already added. If so exit now.
     grep -qE "^$1.*[[:space:]]+$2[[:space:]]*" $ETC_HOSTS && exit 0
     sed -i "s/^\($1.*\)$/\1 $2/" $ETC_HOSTS && echo "$2 added to $ETC_HOSTS ($3)."
 } # add_host
 
-function remove_host() {
+remove_host() {
    ## Check if the given hostname exists. If not exit
    ## now. Nothing to remove.
     sed -n "/^$1/p" $ETC_HOSTS | grep -vqE "^$1.*[[:space:]]+$2[[:space:]]*" && exit 0
