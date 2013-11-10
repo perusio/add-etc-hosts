@@ -58,7 +58,9 @@ fi
 IPV6="no"
 
 ## Parse the arguments for IPv6 handling also.
-if [ $# -eq 2 ]; then
+if [ $# == 1 ]; then
+    HOST=$1
+elif [ $# == 2 ]; then
     if [ $1 == "-6" ]; then
         HOST=$2
         IPV6="yes"
